@@ -12,7 +12,7 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
  * @OA\Info(
  *   version="1.0.0",
  *   title="legacy-hakaton-mvp0 API",
- *   description="я мурчал пока писал эту аннотацию (тихонечко)"
+ *   description="Антон Пересекин напиши в люти тим если заметил изменение "
  * )
  * @OA\Server(url="http://127.0.0.1:8000", description="Local server")
  *
@@ -28,24 +28,17 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *   path="/api/auth/register",
+     *   operationId="authRegister",
      *   summary="Регистрация",
      *   tags={"Auth"},
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       required={"login","password"},
-     *       @OA\Property(property="login", type="string", example="ZOV"),
-     *       @OA\Property(property="password", type="string", example="GOYDASVO")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/RegisterRequest")
      *   ),
      *   @OA\Response(
      *     response=201,
      *     description="Успешно. Возвращает access_token",
-     *     @OA\JsonContent(
-     *       @OA\Property(property="access_token", type="string"),
-     *       @OA\Property(property="token_type", type="string", example="bearer"),
-     *       @OA\Property(property="expires_in", type="integer", example=3600)
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/AuthToken")
      *   ),
      *   @OA\Response(response=422, description="Ошибка валидации")
      * )
@@ -74,24 +67,17 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *   path="/api/auth/login",
+     *   operationId="authLogin",
      *   summary="Логин",
      *   tags={"Auth"},
      *   @OA\RequestBody(
      *     required=true,
-     *     @OA\JsonContent(
-     *       required={"login","password"},
-     *       @OA\Property(property="login", type="string", example="ZOV"),
-     *       @OA\Property(property="password", type="string", example="GOYDASVO")
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/LoginRequest")
      *   ),
      *   @OA\Response(
      *     response=200,
      *     description="OK. Возвращает access_token",
-     *     @OA\JsonContent(
-     *       @OA\Property(property="access_token", type="string"),
-     *       @OA\Property(property="token_type", type="string", example="bearer"),
-     *       @OA\Property(property="expires_in", type="integer", example=3600)
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/AuthToken")
      *   ),
      *   @OA\Response(response=422, description="Неверные учётные данные")
      * )
@@ -122,12 +108,14 @@ class AuthController extends Controller
     /**
      * @OA\Get(
      *   path="/api/auth/me",
+     *   operationId="authMe",
      *   summary="Текущий пользователь",
      *   security={{"bearerAuth": {}}},
      *   tags={"Auth"},
      *   @OA\Response(
      *     response=200,
-     *     description="OK"
+     *     description="OK",
+     *     @OA\JsonContent(ref="#/components/schemas/User")
      *   ),
      *   @OA\Response(response=401, description="Неавторизован")
      * )
@@ -140,10 +128,15 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *   path="/api/auth/logout",
+     *   operationId="authLogout",
      *   summary="Выход",
      *   security={{"bearerAuth": {}}},
      *   tags={"Auth"},
-     *   @OA\Response(response=200, description="OK"),
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(ref="#/components/schemas/MessageResponse")
+     *   ),
      *   @OA\Response(response=401, description="Неавторизован")
      * )
      */
@@ -156,17 +149,14 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *   path="/api/auth/refresh",
+     *   operationId="authRefresh",
      *   summary="Обновление access токена",
      *   security={{"bearerAuth": {}}},
      *   tags={"Auth"},
      *   @OA\Response(
      *     response=200,
      *     description="OK. Возвращает новый access_token",
-     *     @OA\JsonContent(
-     *       @OA\Property(property="access_token", type="string"),
-     *       @OA\Property(property="token_type", type="string", example="bearer"),
-     *       @OA\Property(property="expires_in", type="integer", example=3600)
-     *     )
+     *     @OA\JsonContent(ref="#/components/schemas/AuthToken")
      *   ),
      *   @OA\Response(response=401, description="Неавторизован/просрочен")
      * )

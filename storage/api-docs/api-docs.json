@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "legacy-hakaton-mvp0 API",
-        "description": "я мурчал пока писал эту аннотацию (тихонечко)",
+        "description": "Антон Пересекин напиши в люти тим если заметил изменение ",
         "version": "1.0.0"
     },
     "servers": [
@@ -18,27 +18,13 @@
                     "Auth"
                 ],
                 "summary": "Регистрация",
-                "operationId": "d764dd091cc4494ae0baf360b03319f3",
+                "operationId": "authRegister",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "login",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "login": {
-                                        "type": "string",
-                                        "example": "ZOV"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "GOYDASVO"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/RegisterRequest"
                             }
                         }
                     }
@@ -49,20 +35,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "access_token": {
-                                            "type": "string"
-                                        },
-                                        "token_type": {
-                                            "type": "string",
-                                            "example": "bearer"
-                                        },
-                                        "expires_in": {
-                                            "type": "integer",
-                                            "example": 3600
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/AuthToken"
                                 }
                             }
                         }
@@ -79,27 +52,13 @@
                     "Auth"
                 ],
                 "summary": "Логин",
-                "operationId": "8dcb70df1020986038d098cc08d05dae",
+                "operationId": "authLogin",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "login",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "login": {
-                                        "type": "string",
-                                        "example": "ZOV"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "GOYDASVO"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/LoginRequest"
                             }
                         }
                     }
@@ -110,20 +69,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "access_token": {
-                                            "type": "string"
-                                        },
-                                        "token_type": {
-                                            "type": "string",
-                                            "example": "bearer"
-                                        },
-                                        "expires_in": {
-                                            "type": "integer",
-                                            "example": 3600
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/AuthToken"
                                 }
                             }
                         }
@@ -140,10 +86,17 @@
                     "Auth"
                 ],
                 "summary": "Текущий пользователь",
-                "operationId": "b9abb1a7a74670a19c215c2c133f14d8",
+                "operationId": "authMe",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Неавторизован"
@@ -162,10 +115,17 @@
                     "Auth"
                 ],
                 "summary": "Выход",
-                "operationId": "69281b12abb272c76871f19cb17ca563",
+                "operationId": "authLogout",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Неавторизован"
@@ -184,27 +144,14 @@
                     "Auth"
                 ],
                 "summary": "Обновление access токена",
-                "operationId": "b2eae7a8032954d25b46c7ec6f489c68",
+                "operationId": "authRefresh",
                 "responses": {
                     "200": {
                         "description": "OK. Возвращает новый access_token",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "access_token": {
-                                            "type": "string"
-                                        },
-                                        "token_type": {
-                                            "type": "string",
-                                            "example": "bearer"
-                                        },
-                                        "expires_in": {
-                                            "type": "integer",
-                                            "example": 3600
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/AuthToken"
                                 }
                             }
                         }
@@ -222,6 +169,102 @@
         }
     },
     "components": {
+        "schemas": {
+            "AuthToken": {
+                "required": [
+                    "access_token",
+                    "token_type",
+                    "expires_in"
+                ],
+                "properties": {
+                    "access_token": {
+                        "type": "string"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "bearer"
+                    },
+                    "expires_in": {
+                        "type": "integer",
+                        "example": 3600
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "required": [
+                    "login",
+                    "password"
+                ],
+                "properties": {
+                    "login": {
+                        "type": "string",
+                        "example": "ZOV"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "GOYDASVO"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "required": [
+                    "login",
+                    "password"
+                ],
+                "properties": {
+                    "login": {
+                        "type": "string",
+                        "example": "ZOV"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "GOYDASVO"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "required": [
+                    "login",
+                    "created_at",
+                    "updated_at",
+                    "id"
+                ],
+                "properties": {
+                    "login": {
+                        "type": "string",
+                        "example": "ZOV"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-12T11:31:47.661000Z"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-10-12T11:31:47.661000Z"
+                    },
+                    "id": {
+                        "description": "Строковый ObjectId пользователя",
+                        "type": "string",
+                        "example": "68eb91a3b5bc2188710e0e92"
+                    }
+                },
+                "type": "object"
+            },
+            "MessageResponse": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Logged out"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
