@@ -222,7 +222,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Обновление access по refresh (в заголовке Bearer или в теле refresh_token)",
+                "summary": "Обновление access по refresh",
                 "operationId": "b2eae7a8032954d25b46c7ec6f489c68",
                 "requestBody": {
                     "required": false,

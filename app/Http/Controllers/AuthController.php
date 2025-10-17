@@ -157,7 +157,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *   path="/api/auth/refresh", tags={"Auth"},
-     *   summary="Обновление access по refresh (в заголовке Bearer или в теле refresh_token)",
+     *   summary="Обновление access по refresh",
      *   @OA\RequestBody(required=false, @OA\JsonContent(ref="#/components/schemas/RefreshRequest")),
      *   @OA\Response(response=200, description="OK",
      *     @OA\JsonContent(allOf={
