@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "legacy-hakaton-mvp0 API",
-        "description": "Антон Пересекин напиши в люти тим если заметил изменение ",
+        "description": "я мурчал пока писал эту аннотацию (тихонечко)",
         "version": "1.0.0"
     },
     "servers": [
@@ -18,7 +18,7 @@
                     "Auth"
                 ],
                 "summary": "Регистрация",
-                "operationId": "authRegister",
+                "operationId": "d764dd091cc4494ae0baf360b03319f3",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -31,17 +31,36 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Успешно. Возвращает access_token",
+                        "description": "Успешно",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AuthToken"
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponseBase"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/TokenPair"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
                                 }
                             }
                         }
                     },
                     "422": {
-                        "description": "Ошибка валидации"
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseBase"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -52,7 +71,7 @@
                     "Auth"
                 ],
                 "summary": "Логин",
-                "operationId": "authLogin",
+                "operationId": "8dcb70df1020986038d098cc08d05dae",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -65,17 +84,36 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "OK. Возвращает access_token",
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AuthToken"
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponseBase"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/TokenPair"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
                                 }
                             }
                         }
                     },
                     "422": {
-                        "description": "Неверные учётные данные"
+                        "description": "Неверные учётные данные",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseBase"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -86,20 +124,39 @@
                     "Auth"
                 ],
                 "summary": "Текущий пользователь",
-                "operationId": "authMe",
+                "operationId": "b9abb1a7a74670a19c215c2c133f14d8",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/User"
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponseBase"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/User"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Неавторизован"
+                        "description": "Неавторизован",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseBase"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -114,21 +171,43 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Выход",
-                "operationId": "authLogout",
+                "summary": "Выход (инвалидация токенов)",
+                "operationId": "69281b12abb272c76871f19cb17ca563",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "refresh_token": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/MessageResponse"
+                                    "$ref": "#/components/schemas/ApiResponseBase"
                                 }
                             }
                         }
                     },
-                    "401": {
-                        "description": "Неавторизован"
+                    "400": {
+                        "description": "Нет токена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseBase"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -143,50 +222,192 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Обновление access токена",
-                "operationId": "authRefresh",
+                "summary": "Обновление access по refresh (в заголовке Bearer или в теле refresh_token)",
+                "operationId": "b2eae7a8032954d25b46c7ec6f489c68",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshRequest"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "OK. Возвращает новый access_token",
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AuthToken"
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponseBase"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/TokenPair"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректный/отсутствующий токен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseBase"
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Неавторизован/просрочен"
+                        "description": "Истёк/невалиден",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseBase"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/yandex/url": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Получить URL для авторизации в Яндекс",
+                "operationId": "a1bd55532f7176747fb3d222e7e2b0cc",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponseBase"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/YandexAuthUrl"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/yandex/exchange": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Обмен кода на токены Яндекс и вход",
+                "operationId": "b6e9ab98ee4b8ec2dac97559cf7c0310",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YandexExchangeRequest"
+                            }
+                        }
                     }
                 },
-                "security": [
-                    {
-                        "bearerAuth": []
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiResponseBase"
+                                        },
+                                        {
+                                            "properties": {
+                                                "data": {
+                                                    "$ref": "#/components/schemas/TokenPair"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка обмена кода/получения профайла",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponseBase"
+                                }
+                            }
+                        }
                     }
-                ]
+                }
             }
         }
     },
     "components": {
         "schemas": {
-            "AuthToken": {
+            "ApiResponseBase": {
+                "required": [
+                    "statusCode",
+                    "message"
+                ],
+                "properties": {
+                    "statusCode": {
+                        "description": "Базовый ответ",
+                        "type": "integer",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "OK"
+                    }
+                },
+                "type": "object"
+            },
+            "TokenPair": {
                 "required": [
                     "access_token",
-                    "token_type",
-                    "expires_in"
+                    "expires_in",
+                    "refresh_token",
+                    "refresh_expires_in"
                 ],
                 "properties": {
                     "access_token": {
                         "type": "string"
                     },
-                    "token_type": {
-                        "type": "string",
-                        "example": "bearer"
-                    },
                     "expires_in": {
                         "type": "integer",
                         "example": 3600
+                    },
+                    "refresh_token": {
+                        "type": "string"
+                    },
+                    "refresh_expires_in": {
+                        "type": "integer",
+                        "example": 1209600
                     }
                 },
                 "type": "object"
@@ -225,13 +446,16 @@
                 },
                 "type": "object"
             },
+            "RefreshRequest": {
+                "properties": {
+                    "refresh_token": {
+                        "type": "string",
+                        "example": "eyJhbGciOiJIUzI1..."
+                    }
+                },
+                "type": "object"
+            },
             "User": {
-                "required": [
-                    "login",
-                    "created_at",
-                    "updated_at",
-                    "id"
-                ],
                 "properties": {
                     "login": {
                         "type": "string",
@@ -239,27 +463,39 @@
                     },
                     "updated_at": {
                         "type": "string",
-                        "format": "date-time",
                         "example": "2025-10-12T11:31:47.661000Z"
                     },
                     "created_at": {
                         "type": "string",
-                        "format": "date-time",
                         "example": "2025-10-12T11:31:47.661000Z"
                     },
                     "id": {
-                        "description": "Строковый ObjectId пользователя",
                         "type": "string",
                         "example": "68eb91a3b5bc2188710e0e92"
                     }
                 },
                 "type": "object"
             },
-            "MessageResponse": {
+            "YandexAuthUrl": {
+                "required": [
+                    "auth_url"
+                ],
                 "properties": {
-                    "message": {
+                    "auth_url": {
                         "type": "string",
-                        "example": "Logged out"
+                        "example": "https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info"
+                    }
+                },
+                "type": "object"
+            },
+            "YandexExchangeRequest": {
+                "required": [
+                    "code"
+                ],
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "example": "AQAAAAA...codefromyandex..."
                     }
                 },
                 "type": "object"
