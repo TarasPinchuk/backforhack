@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Concerns;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 
 trait ApiResponse
@@ -13,9 +14,16 @@ trait ApiResponse
             'message'    => $message,
         ];
 
-        if (!is_null($data)) {
+        if ($data instanceof Arrayable) {
+            $data = $data->toArray();
+        }
+
+        if (is_array($data)) {
+            $payload += $data;
+        } elseif (!is_null($data)) {
             $payload['data'] = $data;
         }
+
         if (!is_null($errors)) {
             $payload['errors'] = $errors;
         }
@@ -23,28 +31,26 @@ trait ApiResponse
         return response()->json(
             $payload,
             $statusCode,
-            [],
-            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-        );
+            [], 
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE 
+        );;
     }
 
-
-    protected function ok($data = null, string $message = 'OK'): JsonResponse
+    public function ok($data = null, string $message = 'OK'): JsonResponse
     {
         return $this->respond(200, $message, $data);
     }
 
-    protected function created($data = null, string $message = 'Created'): JsonResponse
+    public function created($data = null, string $message = 'Created'): JsonResponse
     {
         return $this->respond(201, $message, $data);
     }
 
-    protected function error(int $statusCode, string $message, $errors = null): JsonResponse
+    public function error(int $statusCode, string $message, $errors = null): JsonResponse
     {
         return $this->respond($statusCode, $message, null, $errors);
     }
 
-    // немножко легаси, я это потом уберу
     protected function success(string $message = 'OK', $data = null, int $status = 200): JsonResponse
     {
         return $this->respond($status, $message, $data);

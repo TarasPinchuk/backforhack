@@ -3,6 +3,11 @@
 namespace App\OpenApi;
 
 /**
+ * {
+ *   "statusCode": 200,
+ *   "message": "OK",
+ * }
+ *
  * @OA\Schema(
  *   schema="ApiResponseBase",
  *   type="object",
@@ -15,12 +20,11 @@ namespace App\OpenApi;
  *   schema="TokenPair",
  *   type="object",
  *   required={"access_token","expires_in","refresh_token","refresh_expires_in"},
- *   @OA\Property(property="access_token",       type="string"),
+ *   @OA\Property(property="access_token",       type="string", example="eyJhbGciOi..."),
  *   @OA\Property(property="expires_in",         type="integer", example=3600),
- *   @OA\Property(property="refresh_token",      type="string"),
+ *   @OA\Property(property="refresh_token",      type="string", example="eyJhbGciOi..."),
  *   @OA\Property(property="refresh_expires_in", type="integer", example=1209600)
  * )
- *
  *
  * @OA\Schema(
  *   schema="RegisterRequest",
@@ -44,23 +48,25 @@ namespace App\OpenApi;
  *   @OA\Property(property="refresh_token", type="string", example="eyJhbGciOiJIUzI1...")
  * )
  *
- *
  * @OA\Schema(
  *   schema="User",
  *   type="object",
- *   @OA\Property(property="login",      type="string",  example="ZOV"),
- *   @OA\Property(property="updated_at", type="string",  example="2025-10-12T11:31:47.661000Z"),
- *   @OA\Property(property="created_at", type="string",  example="2025-10-12T11:31:47.661000Z"),
- *   @OA\Property(property="id",         type="string",  example="68eb91a3b5bc2188710e0e92")
+ *   required={"login","id","created_at","updated_at"},
+ *   @OA\Property(property="login",      type="string", example="ZOV"),
+ *   @OA\Property(property="updated_at", type="string", example="2025-10-12T11:31:47.661000Z"),
+ *   @OA\Property(property="created_at", type="string", example="2025-10-12T11:31:47.661000Z"),
+ *   @OA\Property(property="id",         type="string", example="68eb91a3b5bc2188710e0e92")
  * )
- *
  *
  * @OA\Schema(
  *   schema="YandexAuthUrl",
  *   type="object",
  *   required={"auth_url"},
- *   @OA\Property(property="auth_url", type="string",
- *     example="https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info")
+ *   @OA\Property(
+ *     property="auth_url",
+ *     type="string",
+ *     example="https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info&force_confirm=yes"
+ *   )
  * )
  *
  * @OA\Schema(
@@ -78,9 +84,7 @@ namespace App\OpenApi;
  *   schema="AuthTokenPairResponse",
  *   allOf={
  *     @OA\Schema(ref="#/components/schemas/ApiResponseBase"),
- *     @OA\Schema(type="object",
- *       @OA\Property(property="data", ref="#/components/schemas/TokenPair")
- *     )
+ *     @OA\Schema(ref="#/components/schemas/TokenPair")
  *   }
  * )
  *
@@ -88,9 +92,7 @@ namespace App\OpenApi;
  *   schema="MeResponse",
  *   allOf={
  *     @OA\Schema(ref="#/components/schemas/ApiResponseBase"),
- *     @OA\Schema(type="object",
- *       @OA\Property(property="data", ref="#/components/schemas/User")
- *     )
+ *     @OA\Schema(ref="#/components/schemas/User")
  *   }
  * )
  *
@@ -98,9 +100,7 @@ namespace App\OpenApi;
  *   schema="YandexAuthUrlResponse",
  *   allOf={
  *     @OA\Schema(ref="#/components/schemas/ApiResponseBase"),
- *     @OA\Schema(type="object",
- *       @OA\Property(property="data", ref="#/components/schemas/YandexAuthUrl")
- *     )
+ *     @OA\Schema(ref="#/components/schemas/YandexAuthUrl")
  *   }
  * )
  *
@@ -108,9 +108,7 @@ namespace App\OpenApi;
  *   schema="YandexCallbackResponse",
  *   allOf={
  *     @OA\Schema(ref="#/components/schemas/ApiResponseBase"),
- *     @OA\Schema(type="object",
- *       @OA\Property(property="data", ref="#/components/schemas/YandexCallbackPayload")
- *     )
+ *     @OA\Schema(ref="#/components/schemas/YandexCallbackPayload")
  *   }
  * )
  *
@@ -118,12 +116,7 @@ namespace App\OpenApi;
  *   schema="YandexExchangeRequest",
  *   type="object",
  *   required={"code"},
- *   @OA\Property(
- *     property="code",
- *     type="string",
- *     example="57bpy27qfk7n7i6o"
- *   )
+ *   @OA\Property(property="code", type="string", example="57bpy27qfk7n7i6o")
  * )
  */
-
 class Schemas {}

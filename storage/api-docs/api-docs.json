@@ -144,7 +144,8 @@
                             "schema": {
                                 "properties": {
                                     "refresh_token": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "eyJhbGciOiJIUzI1..."
                                     }
                                 },
                                 "type": "object"
@@ -301,6 +302,7 @@
                 ],
                 "properties": {
                     "statusCode": {
+                        "description": "{\n  \"statusCode\": 200,\n  \"message\": \"OK\",\n}",
                         "type": "integer",
                         "example": 200
                     },
@@ -320,14 +322,16 @@
                 ],
                 "properties": {
                     "access_token": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "eyJhbGciOi..."
                     },
                     "expires_in": {
                         "type": "integer",
                         "example": 3600
                     },
                     "refresh_token": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "eyJhbGciOi..."
                     },
                     "refresh_expires_in": {
                         "type": "integer",
@@ -380,6 +384,12 @@
                 "type": "object"
             },
             "User": {
+                "required": [
+                    "login",
+                    "id",
+                    "created_at",
+                    "updated_at"
+                ],
                 "properties": {
                     "login": {
                         "type": "string",
@@ -407,7 +417,7 @@
                 "properties": {
                     "auth_url": {
                         "type": "string",
-                        "example": "https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info"
+                        "example": "https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info&force_confirm=yes"
                     }
                 },
                 "type": "object"
@@ -445,12 +455,7 @@
                         "$ref": "#/components/schemas/ApiResponseBase"
                     },
                     {
-                        "properties": {
-                            "data": {
-                                "$ref": "#/components/schemas/TokenPair"
-                            }
-                        },
-                        "type": "object"
+                        "$ref": "#/components/schemas/TokenPair"
                     }
                 ]
             },
@@ -460,12 +465,7 @@
                         "$ref": "#/components/schemas/ApiResponseBase"
                     },
                     {
-                        "properties": {
-                            "data": {
-                                "$ref": "#/components/schemas/User"
-                            }
-                        },
-                        "type": "object"
+                        "$ref": "#/components/schemas/User"
                     }
                 ]
             },
@@ -475,12 +475,7 @@
                         "$ref": "#/components/schemas/ApiResponseBase"
                     },
                     {
-                        "properties": {
-                            "data": {
-                                "$ref": "#/components/schemas/YandexAuthUrl"
-                            }
-                        },
-                        "type": "object"
+                        "$ref": "#/components/schemas/YandexAuthUrl"
                     }
                 ]
             },
@@ -490,12 +485,7 @@
                         "$ref": "#/components/schemas/ApiResponseBase"
                     },
                     {
-                        "properties": {
-                            "data": {
-                                "$ref": "#/components/schemas/YandexCallbackPayload"
-                            }
-                        },
-                        "type": "object"
+                        "$ref": "#/components/schemas/YandexCallbackPayload"
                     }
                 ]
             },

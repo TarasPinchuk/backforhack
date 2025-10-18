@@ -35,7 +35,7 @@ class AuthController extends Controller
         $accessToken = $guard->login($user);
         $accessTtl   = $guard->factory()->getTTL();
 
-        $refreshTtl   = (int) config('jwt.refresh_ttl'); 
+        $refreshTtl   = (int) config('jwt.refresh_ttl');
         $refreshToken = $guard
             ->setTTL($refreshTtl)
             ->claims(['typ' => 'refresh'])
@@ -55,13 +55,24 @@ class AuthController extends Controller
      * @OA\Post(
      *   path="/api/auth/register",
      *   operationId="authRegister",
-     *   tags={"Auth"}, summary="Регистрация",
-     *   @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/RegisterRequest")),
-     *   @OA\Response(response=201, description="Успешно",
+     *   tags={"Auth"},
+     *   summary="Регистрация",
+     *   @OA\RequestBody(
+     *     required=true,
+     *     content={
+     *       "application/json" = @OA\JsonContent(ref="#/components/schemas/RegisterRequest")
+     *     }
+     *   ),
+     *   @OA\Response(
+     *     response=201,
+     *     description="Успешно",
      *     @OA\JsonContent(ref="#/components/schemas/AuthTokenPairResponse")
      *   ),
-     *   @OA\Response(response=422, description="Ошибка валидации",
-     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase"))
+     *   @OA\Response(
+     *     response=422,
+     *     description="Ошибка валидации",
+     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase")
+     *   )
      * )
      */
     public function register(Request $request)
@@ -83,13 +94,24 @@ class AuthController extends Controller
      * @OA\Post(
      *   path="/api/auth/login",
      *   operationId="authLogin",
-     *   tags={"Auth"}, summary="Логин",
-     *   @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/LoginRequest")),
-     *   @OA\Response(response=200, description="OK",
+     *   tags={"Auth"},
+     *   summary="Логин",
+     *   @OA\RequestBody(
+     *     required=true,
+     *     content={
+     *       "application/json" = @OA\JsonContent(ref="#/components/schemas/LoginRequest")
+     *     }
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
      *     @OA\JsonContent(ref="#/components/schemas/AuthTokenPairResponse")
      *   ),
-     *   @OA\Response(response=422, description="Неверные учётные данные",
-     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase"))
+     *   @OA\Response(
+     *     response=422,
+     *     description="Неверные учётные данные",
+     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase")
+     *   )
      * )
      */
     public function login(Request $request)
@@ -112,13 +134,19 @@ class AuthController extends Controller
      * @OA\Get(
      *   path="/api/auth/me",
      *   operationId="authMe",
-     *   tags={"Auth"}, summary="Текущий пользователь",
+     *   tags={"Auth"},
+     *   summary="Текущий пользователь",
      *   security={{"bearerAuth":{}}},
-     *   @OA\Response(response=200, description="OK",
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
      *     @OA\JsonContent(ref="#/components/schemas/MeResponse")
      *   ),
-     *   @OA\Response(response=401, description="Неавторизован",
-     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase"))
+     *   @OA\Response(
+     *     response=401,
+     *     description="Неавторизован",
+     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase")
+     *   )
      * )
      */
     public function me()
@@ -130,12 +158,22 @@ class AuthController extends Controller
      * @OA\Post(
      *   path="/api/auth/logout",
      *   operationId="authLogout",
-     *   tags={"Auth"}, summary="Выход (инвалидация токенов)",
+     *   tags={"Auth"},
+     *   summary="Выход (инвалидация токенов)",
      *   security={{"bearerAuth":{}}},
-     *   @OA\RequestBody(required=false,
-     *     @OA\JsonContent(@OA\Property(property="refresh_token", type="string"))),
-     *   @OA\Response(response=200, description="OK",
-     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase"))
+     *   @OA\RequestBody(
+     *     required=false,
+     *     content={
+     *       "application/json" = @OA\JsonContent(
+     *         @OA\Property(property="refresh_token", type="string", example="eyJhbGciOiJIUzI1...")
+     *       )
+     *     }
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase")
+     *   )
      * )
      */
     public function logout(Request $request)
@@ -157,15 +195,29 @@ class AuthController extends Controller
      * @OA\Post(
      *   path="/api/auth/refresh",
      *   operationId="authRefresh",
-     *   tags={"Auth"}, summary="Обновление access по refresh",
-     *   @OA\RequestBody(required=false, @OA\JsonContent(ref="#/components/schemas/RefreshRequest")),
-     *   @OA\Response(response=200, description="OK",
+     *   tags={"Auth"},
+     *   summary="Обновление access по refresh",
+     *   @OA\RequestBody(
+     *     required=false,
+     *     content={
+     *       "application/json" = @OA\JsonContent(ref="#/components/schemas/RefreshRequest")
+     *     }
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
      *     @OA\JsonContent(ref="#/components/schemas/AuthTokenPairResponse")
      *   ),
-     *   @OA\Response(response=400, description="Некорректный/отсутствующий токен",
-     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase")),
-     *   @OA\Response(response=401, description="Истёк/невалиден",
-     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase"))
+     *   @OA\Response(
+     *     response=400,
+     *     description="Некорректный/отсутствующий токен",
+     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase")
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Истёк/невалиден",
+     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase")
+     *   )
      * )
      */
     public function refresh(Request $request)
@@ -204,7 +256,8 @@ class AuthController extends Controller
      * @OA\Get(
      *   path="/api/auth/yandex/url",
      *   operationId="authYandexUrl",
-     *   tags={"Auth"}, summary="Получить URL для авторизации в Яндекс / принять callback",
+     *   tags={"Auth"},
+     *   summary="Получить URL для авторизации в Яндекс / принять callback",
      *   @OA\Response(
      *     response=200,
      *     description="Ссылка для авторизации ИЛИ callback с кодом",
@@ -235,9 +288,6 @@ class AuthController extends Controller
             $redirectWithCode = $front . (str_contains($front, '?') ? '&' : '?') . $qs;
 
             return $this->ok([
-                'code'               => $code,
-                'state'              => $state,
-                'cid'                => $cid,
                 'redirect_with_code' => $redirectWithCode,
             ], 'OAuth callback received');
         }
@@ -263,13 +313,24 @@ class AuthController extends Controller
      * @OA\Post(
      *   path="/api/auth/yandex/exchange",
      *   operationId="authYandexExchange",
-     *   tags={"Auth"}, summary="Обмен кода на токены Яндекс и вход",
-     *   @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/YandexExchangeRequest")),
-     *   @OA\Response(response=200, description="OK",
+     *   tags={"Auth"},
+     *   summary="Обмен кода на токены Яндекс и вход",
+     *   @OA\RequestBody(
+     *     required=true,
+     *     content={
+     *       "application/json" = @OA\JsonContent(ref="#/components/schemas/YandexExchangeRequest")
+     *     }
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
      *     @OA\JsonContent(ref="#/components/schemas/AuthTokenPairResponse")
      *   ),
-     *   @OA\Response(response=400, description="Ошибка обмена кода/получения профайла",
-     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase"))
+     *   @OA\Response(
+     *     response=400,
+     *     description="Ошибка обмена кода/получения профайла",
+     *     @OA\JsonContent(ref="#/components/schemas/ApiResponseBase")
+     *   )
      * )
      */
     public function yandexExchange(Request $request)
@@ -288,7 +349,6 @@ class AuthController extends Controller
             'client_secret' => $secret,
             'redirect_uri'  => $redir,
         ]);
-
         if (!$tokenRes->ok()) {
             return $this->fail(400, 'Yandex token exchange failed');
         }
@@ -297,7 +357,6 @@ class AuthController extends Controller
 
         $infoRes = Http::withHeaders(['Authorization' => 'OAuth ' . $accessToken])
             ->get('https://login.yandex.ru/info?format=json');
-
         if (!$infoRes->ok()) {
             return $this->fail(400, 'Yandex profile request failed');
         }
