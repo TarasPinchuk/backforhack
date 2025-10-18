@@ -2,10 +2,7 @@
 
 namespace App\OpenApi;
 
-use OpenApi\Annotations as OA;
-
 /**
- * Базовый ответ
  * @OA\Schema(
  *   schema="ApiResponseBase",
  *   type="object",
@@ -14,7 +11,6 @@ use OpenApi\Annotations as OA;
  *   @OA\Property(property="message",    type="string",  example="OK")
  * )
  *
- * Пара токенов
  * @OA\Schema(
  *   schema="TokenPair",
  *   type="object",
@@ -25,7 +21,7 @@ use OpenApi\Annotations as OA;
  *   @OA\Property(property="refresh_expires_in", type="integer", example=1209600)
  * )
  *
- * RegisterRequest
+ *
  * @OA\Schema(
  *   schema="RegisterRequest",
  *   type="object",
@@ -34,7 +30,6 @@ use OpenApi\Annotations as OA;
  *   @OA\Property(property="password", type="string", example="GOYDASVO")
  * )
  *
- * LoginRequest
  * @OA\Schema(
  *   schema="LoginRequest",
  *   type="object",
@@ -43,57 +38,92 @@ use OpenApi\Annotations as OA;
  *   @OA\Property(property="password", type="string", example="GOYDASVO")
  * )
  *
- * RefreshRequest
  * @OA\Schema(
  *   schema="RefreshRequest",
  *   type="object",
  *   @OA\Property(property="refresh_token", type="string", example="eyJhbGciOiJIUzI1...")
  * )
  *
- * Пользователь
+ *
  * @OA\Schema(
  *   schema="User",
  *   type="object",
- *   @OA\Property(property="login",      type="string", example="ZOV"),
- *   @OA\Property(property="updated_at", type="string", example="2025-10-12T11:31:47.661000Z"),
- *   @OA\Property(property="created_at", type="string", example="2025-10-12T11:31:47.661000Z"),
- *   @OA\Property(property="id",         type="string", example="68eb91a3b5bc2188710e0e92")
+ *   @OA\Property(property="login",      type="string",  example="ZOV"),
+ *   @OA\Property(property="updated_at", type="string",  example="2025-10-12T11:31:47.661000Z"),
+ *   @OA\Property(property="created_at", type="string",  example="2025-10-12T11:31:47.661000Z"),
+ *   @OA\Property(property="id",         type="string",  example="68eb91a3b5bc2188710e0e92")
  * )
  *
- * YandexAuthUrl
+ *
  * @OA\Schema(
  *   schema="YandexAuthUrl",
  *   type="object",
  *   required={"auth_url"},
- *   @OA\Property(
- *     property="auth_url",
- *     type="string",
- *     example="https://oauth.yandex.ru/authorize?response_type=code&client_id=74aecacf0602423f8cc9fa0e9e919d5c&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Fyandex%2Furl&scope=login%3Ainfo&force_confirm=yes"
- *   )
+ *   @OA\Property(property="auth_url", type="string",
+ *     example="https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info")
  * )
  *
- * YandexAuthCallback
  * @OA\Schema(
- *   schema="YandexAuthCallback",
+ *   schema="YandexCallbackPayload",
  *   type="object",
  *   required={"code","redirect_with_code"},
- *   @OA\Property(property="code", type="string", example="57bpy27qfk7n7i6o"),
- *   @OA\Property(property="cid",  type="string", nullable=true, example="7kyx8crjpnqxa52zz83e9kp724"),
- *   @OA\Property(property="state", type="string", nullable=true, example="xyz123"),
- *   @OA\Property(
- *     property="redirect_with_code",
- *     type="string",
- *     format="uri",
- *     example="http://127.0.0.1:3000/Personal?code=57bpy27qfk7n7i6o&cid=7kyx8crjpnqxa52zz83e9kp724"
- *   )
+ *   @OA\Property(property="code",               type="string", example="57bpy27qfk7n7i6o"),
+ *   @OA\Property(property="state",              type="string", nullable=true, example="optional-state"),
+ *   @OA\Property(property="cid",                type="string", nullable=true, example="7kyx8crjpnqxa52zz83e9kp724"),
+ *   @OA\Property(property="redirect_with_code", type="string", example="http://127.0.0.1:3000/Personal?code=57bpy27qfk7n7i6o&cid=7kyx8c...&state=optional-state")
  * )
  *
- * YandexExchangeRequest
+ *
+ * @OA\Schema(
+ *   schema="AuthTokenPairResponse",
+ *   allOf={
+ *     @OA\Schema(ref="#/components/schemas/ApiResponseBase"),
+ *     @OA\Schema(type="object",
+ *       @OA\Property(property="data", ref="#/components/schemas/TokenPair")
+ *     )
+ *   }
+ * )
+ *
+ * @OA\Schema(
+ *   schema="MeResponse",
+ *   allOf={
+ *     @OA\Schema(ref="#/components/schemas/ApiResponseBase"),
+ *     @OA\Schema(type="object",
+ *       @OA\Property(property="data", ref="#/components/schemas/User")
+ *     )
+ *   }
+ * )
+ *
+ * @OA\Schema(
+ *   schema="YandexAuthUrlResponse",
+ *   allOf={
+ *     @OA\Schema(ref="#/components/schemas/ApiResponseBase"),
+ *     @OA\Schema(type="object",
+ *       @OA\Property(property="data", ref="#/components/schemas/YandexAuthUrl")
+ *     )
+ *   }
+ * )
+ *
+ * @OA\Schema(
+ *   schema="YandexCallbackResponse",
+ *   allOf={
+ *     @OA\Schema(ref="#/components/schemas/ApiResponseBase"),
+ *     @OA\Schema(type="object",
+ *       @OA\Property(property="data", ref="#/components/schemas/YandexCallbackPayload")
+ *     )
+ *   }
+ * )
+ *
  * @OA\Schema(
  *   schema="YandexExchangeRequest",
  *   type="object",
  *   required={"code"},
- *   @OA\Property(property="code", type="string", example="AQAAAAA...codefromyandex...")
+ *   @OA\Property(
+ *     property="code",
+ *     type="string",
+ *     example="57bpy27qfk7n7i6o"
+ *   )
  * )
  */
-final class Schemas {}
+
+class Schemas {}
