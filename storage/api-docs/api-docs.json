@@ -483,7 +483,35 @@
                 "properties": {
                     "auth_url": {
                         "type": "string",
-                        "example": "https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info"
+                        "example": "https://oauth.yandex.ru/authorize?response_type=code&client_id=74aecacf0602423f8cc9fa0e9e919d5c&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Fyandex%2Furl&scope=login%3Ainfo&force_confirm=yes"
+                    }
+                },
+                "type": "object"
+            },
+            "YandexAuthCallback": {
+                "required": [
+                    "code",
+                    "redirect_with_code"
+                ],
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "example": "57bpy27qfk7n7i6o"
+                    },
+                    "cid": {
+                        "type": "string",
+                        "example": "7kyx8crjpnqxa52zz83e9kp724",
+                        "nullable": true
+                    },
+                    "state": {
+                        "type": "string",
+                        "example": "xyz123",
+                        "nullable": true
+                    },
+                    "redirect_with_code": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "http://127.0.0.1:3000/Personal?code=57bpy27qfk7n7i6o&cid=7kyx8crjpnqxa52zz83e9kp724"
                     }
                 },
                 "type": "object"

@@ -214,14 +214,51 @@ class AuthController extends Controller
      *   )
      * )
      */
-    public function yandexUrl()
-    {
-        $cid    = config('services.yandex.client_id');
-        $redir  = urlencode(config('services.yandex.redirect'));
-        $scope  = urlencode(config('services.yandex.scope', 'login:info'));
-        $url = "https://oauth.yandex.ru/authorize?response_type=code&client_id={$cid}&redirect_uri={$redir}&scope={$scope}&force_confirm=yes";
-        return $this->ok(['auth_url' => $url], 'OK');
+    public function yandexUrl(Request $request)
+{
+    if ($code = $request->query('code')) {
+        $state = $request->query('state');
+        $cid   = $request->query('cid');
+
+        $front = rtrim(
+            config('services.yandex.front_redirect', env('FRONT_REDIRECT_URI', 'http://127.0.0.1:3000/Personal')),
+            '/'
+        );
+
+        $qs = http_build_query(array_filter([
+            'code'  => $code,
+            'state' => $state,
+            'cid'   => $cid,
+        ], fn ($v) => $v !== null && $v !== ''));
+
+        $redirectWithCode = $front.(str_contains($front, '?') ? '&' : '?').$qs;
+
+        return $this->success('OAuth callback received', [
+            'code'               => $code,              
+            'cid'                => $cid,               
+            'state'              => $state,            
+            'redirect_with_code' => $redirectWithCode,  
+        ]);
     }
+
+    $clientId = config('services.yandex.client_id');
+    $redirect = config('services.yandex.redirect');          
+    $scope    = config('services.yandex.scope', 'login:info');
+    $state    = $request->query('state');                   
+
+    $params = array_filter([
+        'response_type' => 'code',
+        'client_id'     => $clientId,
+        'redirect_uri'  => $redirect,
+        'scope'         => $scope,
+        'force_confirm' => 'yes',
+        'state'         => $state,
+    ], fn ($v) => $v !== null && $v !== '');
+
+    $url = 'https://oauth.yandex.ru/authorize?'.http_build_query($params);
+
+    return $this->success('OK', ['auth_url' => $url]);
+}
 
     /**
      * @OA\Post(

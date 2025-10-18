@@ -2,6 +2,8 @@
 
 namespace App\OpenApi;
 
+use OpenApi\Annotations as OA;
+
 /**
  * Базовый ответ
  * @OA\Schema(
@@ -48,23 +50,42 @@ namespace App\OpenApi;
  *   @OA\Property(property="refresh_token", type="string", example="eyJhbGciOiJIUzI1...")
  * )
  *
- * Пользователь 
+ * Пользователь
  * @OA\Schema(
  *   schema="User",
  *   type="object",
- *   @OA\Property(property="login",      type="string",  example="ZOV"),
- *   @OA\Property(property="updated_at", type="string",  example="2025-10-12T11:31:47.661000Z"),
- *   @OA\Property(property="created_at", type="string",  example="2025-10-12T11:31:47.661000Z"),
- *   @OA\Property(property="id",         type="string",  example="68eb91a3b5bc2188710e0e92")
+ *   @OA\Property(property="login",      type="string", example="ZOV"),
+ *   @OA\Property(property="updated_at", type="string", example="2025-10-12T11:31:47.661000Z"),
+ *   @OA\Property(property="created_at", type="string", example="2025-10-12T11:31:47.661000Z"),
+ *   @OA\Property(property="id",         type="string", example="68eb91a3b5bc2188710e0e92")
  * )
  *
- * YandexAuthUrl 
+ * YandexAuthUrl
  * @OA\Schema(
  *   schema="YandexAuthUrl",
  *   type="object",
  *   required={"auth_url"},
- *   @OA\Property(property="auth_url", type="string",
- *     example="https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info")
+ *   @OA\Property(
+ *     property="auth_url",
+ *     type="string",
+ *     example="https://oauth.yandex.ru/authorize?response_type=code&client_id=74aecacf0602423f8cc9fa0e9e919d5c&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Fyandex%2Furl&scope=login%3Ainfo&force_confirm=yes"
+ *   )
+ * )
+ *
+ * YandexAuthCallback
+ * @OA\Schema(
+ *   schema="YandexAuthCallback",
+ *   type="object",
+ *   required={"code","redirect_with_code"},
+ *   @OA\Property(property="code", type="string", example="57bpy27qfk7n7i6o"),
+ *   @OA\Property(property="cid",  type="string", nullable=true, example="7kyx8crjpnqxa52zz83e9kp724"),
+ *   @OA\Property(property="state", type="string", nullable=true, example="xyz123"),
+ *   @OA\Property(
+ *     property="redirect_with_code",
+ *     type="string",
+ *     format="uri",
+ *     example="http://127.0.0.1:3000/Personal?code=57bpy27qfk7n7i6o&cid=7kyx8crjpnqxa52zz83e9kp724"
+ *   )
  * )
  *
  * YandexExchangeRequest
@@ -75,4 +96,4 @@ namespace App\OpenApi;
  *   @OA\Property(property="code", type="string", example="AQAAAAA...codefromyandex...")
  * )
  */
-class Schemas {}
+final class Schemas {}
