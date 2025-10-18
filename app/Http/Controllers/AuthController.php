@@ -261,10 +261,7 @@ class AuthController extends Controller
      *   @OA\Response(
      *     response=200,
      *     description="Ссылка для авторизации ИЛИ callback с кодом",
-     *     @OA\JsonContent(oneOf={
-     *       @OA\Schema(ref="#/components/schemas/YandexAuthUrlResponse"),
-     *       @OA\Schema(ref="#/components/schemas/YandexCallbackResponse")
-     *     })
+     *     @OA\JsonContent(ref="#/components/schemas/YandexUrlResponse")
      *   )
      * )
      */

@@ -118,5 +118,29 @@ namespace App\OpenApi;
  *   required={"code"},
  *   @OA\Property(property="code", type="string", example="57bpy27qfk7n7i6o")
  * )
+ * 
+ * @OA\Schema(
+ *   schema="YandexUrlResponse",
+ *   type="object",
+ *   required={"statusCode","message"},
+ *   allOf={
+ *     @OA\Schema(ref="#/components/schemas/ApiResponseBase"),
+ *     @OA\Schema(
+ *       type="object",
+ *       @OA\Property(
+ *         property="auth_url",
+ *         type="string",
+ *         nullable=true,
+ *         example="https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info&force_confirm=yes"
+ *       ),
+ *       @OA\Property(
+ *         property="redirect_with_code",
+ *         type="string",
+ *         nullable=true,
+ *         example="http://127.0.0.1:3000/Personal?code=57bpy27qfk7n7i6o&cid=7kyx8c..."
+ *       )
+ *     )
+ *   }
+ * )
  */
 class Schemas {}

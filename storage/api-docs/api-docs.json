@@ -236,14 +236,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "oneOf": [
-                                        {
-                                            "$ref": "#/components/schemas/YandexAuthUrlResponse"
-                                        },
-                                        {
-                                            "$ref": "#/components/schemas/YandexCallbackResponse"
-                                        }
-                                    ]
+                                    "$ref": "#/components/schemas/YandexUrlResponse"
                                 }
                             }
                         }
@@ -500,6 +493,33 @@
                     }
                 },
                 "type": "object"
+            },
+            "YandexUrlResponse": {
+                "required": [
+                    "statusCode",
+                    "message"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiResponseBase"
+                    },
+                    {
+                        "properties": {
+                            "auth_url": {
+                                "type": "string",
+                                "example": "https://oauth.yandex.ru/authorize?response_type=code&client_id=...&redirect_uri=...&scope=login:info&force_confirm=yes",
+                                "nullable": true
+                            },
+                            "redirect_with_code": {
+                                "type": "string",
+                                "example": "http://127.0.0.1:3000/Personal?code=57bpy27qfk7n7i6o&cid=7kyx8c...",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
             }
         },
         "securitySchemes": {
