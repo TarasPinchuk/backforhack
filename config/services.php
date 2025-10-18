@@ -36,10 +36,12 @@ return [
     ],
 
     'yandex' => [
-    'client_id'     => env('YANDEX_CLIENT_ID'),
-    'client_secret' => env('YANDEX_CLIENT_SECRET'),
-    'redirect'      => env('YANDEX_REDIRECT_URI'),
-    'scope'         => 'login:info',
-    ],
+    'client_id'          => env('YANDEX_CLIENT_ID'),
+    'client_secret'      => env('YANDEX_CLIENT_SECRET'),
+    'scope'              => env('YANDEX_SCOPE', 'login:info'),
+    'redirect'           => env('YANDEX_REDIRECT', 'http://127.0.0.1:8000/api/auth/yandex/url'), // так быть не должно 
+    'redirect_with_code' => env('YANDEX_FRONT_REDIRECT', 'http://127.0.0.1:3000/Personal'), // так тоже, я исправлю как вернусь с Ростова
+],
+
 
 ];

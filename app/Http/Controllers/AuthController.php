@@ -231,34 +231,33 @@ class AuthController extends Controller
             'cid'   => $cid,
         ], fn ($v) => $v !== null && $v !== ''));
 
-        $redirectWithCode = $front.(str_contains($front, '?') ? '&' : '?').$qs;
+        $redirectWithCode = $front . (str_contains($front, '?') ? '&' : '?') . $qs;
 
-        return $this->success('OAuth callback received', [
-            'code'               => $code,              
-            'cid'                => $cid,               
-            'state'              => $state,            
-            'redirect_with_code' => $redirectWithCode,  
-        ]);
+        return $this->ok([
+            'code'               => $code,
+            'state'              => $state,
+            'cid'                => $cid,
+            'redirect_with_code' => $redirectWithCode,
+        ], 'OK');
     }
 
     $clientId = config('services.yandex.client_id');
-    $redirect = config('services.yandex.redirect');          
+    $redirect = config('services.yandex.redirect');               
     $scope    = config('services.yandex.scope', 'login:info');
-    $state    = $request->query('state');                   
+    $state    = $request->query('state');                          
 
-    $params = array_filter([
+    $authUrl = 'https://oauth.yandex.ru/authorize?' . http_build_query(array_filter([
         'response_type' => 'code',
         'client_id'     => $clientId,
         'redirect_uri'  => $redirect,
         'scope'         => $scope,
         'force_confirm' => 'yes',
         'state'         => $state,
-    ], fn ($v) => $v !== null && $v !== '');
+    ], fn ($v) => $v !== null && $v !== ''));
 
-    $url = 'https://oauth.yandex.ru/authorize?'.http_build_query($params);
-
-    return $this->success('OK', ['auth_url' => $url]);
+    return $this->ok(['auth_url' => $authUrl], 'OK');
 }
+
 
     /**
      * @OA\Post(

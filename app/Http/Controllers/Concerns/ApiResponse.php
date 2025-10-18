@@ -12,11 +12,22 @@ trait ApiResponse
             'statusCode' => $statusCode,
             'message'    => $message,
         ];
-        if (!is_null($data))   $payload['data']   = $data;
-        if (!is_null($errors)) $payload['errors'] = $errors;
 
-        return response()->json($payload, $statusCode);
+        if (!is_null($data)) {
+            $payload['data'] = $data;
+        }
+        if (!is_null($errors)) {
+            $payload['errors'] = $errors;
+        }
+
+        return response()->json(
+            $payload,
+            $statusCode,
+            [],
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        );
     }
+
 
     protected function ok($data = null, string $message = 'OK'): JsonResponse
     {
