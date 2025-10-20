@@ -333,13 +333,15 @@ class AuthController extends Controller
     public function yandexExchange(Request $request)
     {
         $code = (string) $request->input('code', '');
-        if (!$code) return $this->fail(400, 'code is required');
+        if ($code === '') {
+            return $this->fail(400, 'code is required');
+        }
 
-        $cid     = config('services.yandex.client_id');
-        $secret  = config('services.yandex.client_secret');
-        $redir   = config('services.yandex.redirect');
+        $cid    = config('services.yandex.client_id');
+        $secret = config('services.yandex.client_secret');
+        $redir  = config('services.yandex.redirect');
 
-        $tokenRes = Http::asForm()->post('https://oauth.yandex.ru/token', [
+        $tokenRes = \Http::asForm()->post('https://oauth.yandex.ru/token', [
             'grant_type'    => 'authorization_code',
             'code'          => $code,
             'client_id'     => $cid,
@@ -350,30 +352,48 @@ class AuthController extends Controller
             return $this->fail(400, 'Yandex token exchange failed');
         }
 
-        $accessToken = $tokenRes->json('access_token');
+        $accessToken = (string) $tokenRes->json('access_token');
 
-        $infoRes = Http::withHeaders(['Authorization' => 'OAuth ' . $accessToken])
+        $infoRes = \Http::withHeaders(['Authorization' => 'OAuth '.$accessToken])
             ->get('https://login.yandex.ru/info?format=json');
         if (!$infoRes->ok()) {
             return $this->fail(400, 'Yandex profile request failed');
         }
 
-        $login = $infoRes->json('login');
-        if (!$login) {
-            return $this->fail(400, 'Yandex login not returned');
+        $uid    = (string) ($infoRes->json('id') ?? $infoRes->json('uid') ?? $infoRes->json('psuid') ?? '');
+        $yaLoginRaw = $infoRes->json('login'); // может быть null
+        if ($uid === '') {
+            return $this->fail(400, 'Yandex uid not returned');
         }
 
-        $base  = 'ya_' . Str::lower($login);
+        if ($existing = User::where('ya_uid', $uid)->first()) {
+            return $this->ok($this->issueTokenPair($existing), 'Yandex login');
+        }
+
+        $candidateLogin = null;
+        if (is_string($yaLoginRaw) && $yaLoginRaw !== '') {
+            $candidateLogin = 'ya_' . \Str::lower($yaLoginRaw);
+            if ($byLogin = User::where('login', $candidateLogin)->first()) {
+                if (empty($byLogin->ya_uid)) {
+                    $byLogin->ya_uid = $uid;
+                    $byLogin->save();
+                }
+                return $this->ok($this->issueTokenPair($byLogin), 'Yandex login');
+            }
+        }
+
+        $base  = $candidateLogin ?: ('ya' . substr($uid, -8));
         $final = $base;
         $i = 1;
         while (User::where('login', $final)->exists()) {
             $final = $base . $i++;
         }
 
-        $user = User::firstOrCreate(
-            ['login' => $final],
-            ['password' => Hash::make(Str::random(32))]
-        );
+        $user = User::create([
+            'login'    => $final,
+            'password' => \Hash::make(\Str::random(32)),
+            'ya_uid'   => $uid,
+        ]);
 
         return $this->ok($this->issueTokenPair($user), 'Yandex login');
     }
