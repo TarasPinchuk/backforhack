@@ -13,8 +13,17 @@ class User extends MongoAuthUser implements JWTSubject
     protected $connection = 'mongodb';
     protected $collection = 'users';
 
-    protected $fillable = ['login', 'password', 'ya_uid'];
+    protected $fillable = ['login', 'password', 'ya_uid', 'role'];
     protected $hidden = ['password'];
+
+     protected $attributes = [
+        'role' => 0,
+    ];
+
+    public function getRoleAttribute($value)
+    {
+        return is_null($value) ? 0 : (int) $value;
+    }
 
     public function getJWTIdentifier()
     {

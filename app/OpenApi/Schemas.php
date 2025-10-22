@@ -23,7 +23,8 @@ namespace App\OpenApi;
  *   @OA\Property(property="access_token",       type="string", example="eyJhbGciOi..."),
  *   @OA\Property(property="expires_in",         type="integer", example=3600),
  *   @OA\Property(property="refresh_token",      type="string", example="eyJhbGciOi..."),
- *   @OA\Property(property="refresh_expires_in", type="integer", example=1209600)
+ *   @OA\Property(property="refresh_expires_in", type="integer", example=1209600),
+ *   @OA\Property(property="role", type="integer", example=0)
  * )
  *
  * @OA\Schema(

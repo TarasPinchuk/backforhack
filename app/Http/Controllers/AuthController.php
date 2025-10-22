@@ -48,6 +48,7 @@ class AuthController extends Controller
             'expires_in'         => $accessTtl * 60,
             'refresh_token'      => $refreshToken,
             'refresh_expires_in' => $refreshTtl * 60,
+            'role'               => $user->role, 
         ];
     }
 
@@ -85,6 +86,7 @@ class AuthController extends Controller
         $user = User::create([
             'login'    => $data['login'],
             'password' => Hash::make($data['password']),
+            'role'     => 0
         ]);
 
         return $this->created($this->issueTokenPair($user), 'Registered');
@@ -393,6 +395,7 @@ class AuthController extends Controller
             'login'    => $final,
             'password' => \Hash::make(\Str::random(32)),
             'ya_uid'   => $uid,
+            'role'     => 0,
         ]);
 
         return $this->ok($this->issueTokenPair($user), 'Yandex login');

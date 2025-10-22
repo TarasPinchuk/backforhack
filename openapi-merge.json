@@ -1,0 +1,15 @@
+{
+  "inputs": [
+    {
+      "inputFile": "./laravel.json"
+    },
+    {
+      "inputFile": "./fastapi.json",
+      "pathModification": {
+        "prepend": "/places"
+      },
+      "disputePrefix": "Py"
+    }
+  ],
+  "output": "./openapi-merged.json"
+}
