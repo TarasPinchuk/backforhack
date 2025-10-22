@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Proxy\PlacesProxyController;
 
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);         // /api/auth/register
@@ -16,5 +17,12 @@ Route::prefix('auth')->group(function () {
         Route::post('logout',[AuthController::class, 'logout']);            // /api/auth/logout
     });
 });
+
+Route::prefix('places')
+    ->withoutMiddleware(['auth:sanctum', 'throttle:api'])
+    ->group(function () {
+        Route::any('{path?}', [PlacesProxyController::class, 'handle'])
+            ->where('path', '.*');
+    });
 
 // интересно заметит ли этот коммент Антон Пересекин

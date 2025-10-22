@@ -42,5 +42,7 @@ return [
     'redirect'           => env('YANDEX_REDIRECT'), 
 ],
 
-
+    'places' => [
+        'base_url' => env('FASTAPI_BASE_URL', 'http://localhost:8001'),
+],
 ];
